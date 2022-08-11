@@ -23,7 +23,7 @@ services:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
     env_file:
-      - db.env
+      - .env
     depends_on:
       - db
       - redis
