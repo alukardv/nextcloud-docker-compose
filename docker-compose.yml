@@ -27,6 +27,7 @@ services:
     depends_on:
       - db
       - redis
+      - collab
 
   web:
     build: ./web
@@ -50,6 +51,7 @@ services:
     depends_on:
       - db
       - redis
+
 
   proxy:
     build: ./proxy
@@ -83,26 +85,26 @@ services:
 
   collab:
     image: collabora/code
-    container_name: nextcloud-collab
+    restart: always
     networks:
-      - nextcloud_network
+      - proxy-tier
     depends_on:
       - proxy
-      - letsencrypt
+      - letsencrypt-companion
     cap_add:
      - MKNOD
     ports:
       - 9980:9980
     environment:
-      - domain=cloud\\.DOMAIN\\.TDL
+      - aliasgroup1=https://cloud.DOMAIN.TDL:443
       - username=admin
       - password=CREATE-A-SECURE-PASSWORD-HERE
       - VIRTUAL_PROTO=https
-      - VIRTUAL_PORT=443
+      - VIRTUAL_PORT=9980
       - VIRTUAL_HOST=office.DOMAIN.TLD
       - LETSENCRYPT_HOST=office.DOMAIN.TLD
       - LETSENCRYPT_EMAIL=YOUR-EMAIL@DOMAIN.TDL
-    restart: unless-stopped
+
 
 volumes:
   db:
