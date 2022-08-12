@@ -15,7 +15,7 @@ services:
     restart: always
 
   app:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:24.0.3-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
@@ -42,7 +42,7 @@ services:
       - default
 
   cron:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:24.0.3-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
@@ -81,20 +81,28 @@ services:
     depends_on:
       - proxy
 
-# self signed
-#  omgwtfssl:
-#    image: paulczar/omgwtfssl
-#    restart: "no"
-#    volumes:
-#      - certs:/certs
-#    environment:
-#      - SSL_SUBJECT=servhostname.local
-#      - CA_SUBJECT=my@example.com
-#      - SSL_KEY=/certs/servhostname.local.key
-#      - SSL_CSR=/certs/servhostname.local.csr
-#      - SSL_CERT=/certs/servhostname.local.crt
-#    networks:
-#      - proxy-tier
+  collab:
+    image: collabora/code
+    container_name: nextcloud-collab
+    networks:
+      - nextcloud_network
+    depends_on:
+      - proxy
+      - letsencrypt
+    cap_add:
+     - MKNOD
+    ports:
+      - 9980:9980
+    environment:
+      - domain=cloud\\.DOMAIN\\.TDL
+      - username=admin
+      - password=CREATE-A-SECURE-PASSWORD-HERE
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_PORT=443
+      - VIRTUAL_HOST=office.DOMAIN.TLD
+      - LETSENCRYPT_HOST=office.DOMAIN.TLD
+      - LETSENCRYPT_EMAIL=YOUR-EMAIL@DOMAIN.TDL
+    restart: unless-stopped
 
 volumes:
   db:
