@@ -15,7 +15,7 @@ services:
     restart: always
 
   app:
-    image: nextcloud:24.0.4-fpm-alpine
+    image: nextcloud:24.0.6-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
@@ -42,7 +42,7 @@ services:
       - default
 
   cron:
-    image: nextcloud:24.0.4-fpm-alpine
+    image: nextcloud:24.0.6-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
@@ -82,27 +82,27 @@ services:
     depends_on:
       - proxy
 
-  #collab:
-    #image: collabora/code
-    #restart: always
-    #networks:
-      #- proxy-tier
-    #depends_on:
-      #- proxy
-      #- letsencrypt-companion
-    #cap_add:
-      #- MKNOD
-    #ports:
-      #- 9980:9980
-    #environment:
-      #- aliasgroup1=https://cloud.DOMAIN.TDL:443
-      #- username=admin
-      #- password=CREATE-A-SECURE-PASSWORD-HERE
-      #- VIRTUAL_PROTO=https
-      #- VIRTUAL_PORT=9980
-      #- VIRTUAL_HOST=office.DOMAIN.TLD
-      #- LETSENCRYPT_HOST=office.DOMAIN.TLD
-      #- LETSENCRYPT_EMAIL=YOUR-EMAIL@DOMAIN.TDL
+  collab:
+    image: collabora/code
+    restart: always
+    networks:
+      - proxy-tier
+    depends_on:
+      - proxy
+      - letsencrypt-companion
+    cap_add:
+      - MKNOD
+    ports:
+      - 9980:9980
+    environment:
+      - aliasgroup1=https://cloud.DOMAIN.TDL:443
+      - username=admin
+      - password=CREATE-A-SECURE-PASSWORD-HERE
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_PORT=9980
+      - VIRTUAL_HOST=office.DOMAIN.TLD
+      - LETSENCRYPT_HOST=office.DOMAIN.TLD
+      - LETSENCRYPT_EMAIL=YOUR-EMAIL@DOMAIN.TDL
 
 
 volumes:
